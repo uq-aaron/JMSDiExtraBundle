@@ -21,7 +21,7 @@ namespace JMS\DiExtraBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -57,7 +57,7 @@ class IntegrationPass implements CompilerPassInterface
     private function integrateWithDoctrine($container)
     {
         foreach ($container->getDefinitions() as $id => $definition) {
-            if (!$definition instanceof DefinitionDecorator) {
+            if (!$definition instanceof ChildDefinition) {
                 continue;
             }
 
@@ -68,11 +68,11 @@ class IntegrationPass implements CompilerPassInterface
             $public = $definition->isPublic();
             $definition->setPublic(false);
             
-            $container->setDefinition($id.'.delegate', $definition);
+            $container->setDefinition($id . '.delegate', $definition);
             
             $container->register($id, $container->getParameter('jms_di_extra.doctrine_integration.entity_manager.class'))
                 ->setFile($container->getParameter('jms_di_extra.doctrine_integration.entity_manager.file'))
-                ->addArgument(new Reference($id.'.delegate'))
+                ->addArgument(new Reference($id . '.delegate'))
                 ->addArgument(new Reference('service_container'))
                 ->setPublic($public);
         }

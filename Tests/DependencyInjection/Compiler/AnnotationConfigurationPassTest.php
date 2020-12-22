@@ -23,7 +23,7 @@ use JMS\DiExtraBundle\DependencyInjection\Compiler\AnnotationConfigurationPass;
 use JMS\DiExtraBundle\DependencyInjection\JMSDiExtraExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -83,7 +83,7 @@ class AnnotationConfigurationPassTest extends TestCase
         $this->assertTrue($container->hasDefinition('concrete_class'));
         $this->assertTrue($container->hasDefinition('abstract_class'));
 
-        $def = new DefinitionDecorator('abstract_class');
+        $def = new ChildDefinition('abstract_class');
         $def->setClass('JMS\DiExtraBundle\Tests\Functional\Bundle\TestBundle\Inheritance\ConcreteClass');
         $def->addArgument(new Reference('foo'));
         $def->addArgument(new Reference('bar'));
